@@ -5,33 +5,35 @@ Nhật ký giấc ngủ cho **hai người**: một người ghi nhật ký mỗ
 Mục tiêu sau 2–4 tuần: giờ dậy ổn định (lệch ≤ 30 phút, kể cả cuối tuần), chờ ngủ ngắn hơn, buổi sáng thấy khoẻ hơn.
 
 | | |
-|---|---|
+| --- | --- |
 | **App** | Expo SDK 58 · React Native 0.88 · Expo Router · SQLite · SecureStore · three.js (mặt trăng 3D) |
 | **API** | NestJS 11 · Neon Postgres (SQL viết tay, không ORM) · deploy Vercel |
 | **Yêu cầu** | Node.js 24 (`.nvmrc`), npm. `app/` và `api/` cài dependency riêng, không dùng monorepo tool |
 
 ## Tính năng
 
-**Người ghi nhật ký**
+### Người ghi nhật ký
+
 - Ghép đôi bằng mã kết nối 6 số; **tự chọn có chia sẻ hay không**, tắt được bất cứ lúc nào (server chặn, không chỉ app ẩn).
 - Sàng lọc an toàn lúc đầu (lưu trên máy) · giờ dậy cố định.
 - Nhật ký sáng ≤ 30 giây · cửa sổ ngủ tự điều chỉnh theo hiệu suất giấc ngủ · nhắc buổi tối.
 - Trò chơi ru ngủ bằng giọng đọc, màn hình tối, tự dừng sau 20 phút — không điểm số, không thắng thua.
 - Chạy offline, đồng bộ khi mở app.
 
-**Người đồng hành**
+### Người đồng hành
+
 - Viết trước lời chúc cho các tối tới, khung cảnh riêng cho trò chơi.
 - Xem biểu đồ 7/30 ngày khi được chia sẻ.
 
 ## Tiến độ
 
 | Phase | Nội dung | Trạng thái |
-|---|---|---|
+| --- | --- | --- |
 | 1 | API: auth, `/me`, logs, notes | ✅ 46/46 e2e trên Neon · ⏳ chưa deploy |
 | 2 | App nền: onboarding, ghép đôi, cài đặt chia sẻ | ✅ code + unit test · ⏳ chưa thử trên iPhone, chưa build EAS |
-| 3 | Nhật ký sáng, đồng bộ, cửa sổ ngủ, nhắc buổi tối | — |
-| 4 | Trò chơi ru ngủ | — |
-| 5 | Màn người đồng hành | — |
+| 3 | Nhật ký sáng, đồng bộ, cửa sổ ngủ, nhắc buổi tối | ✅ code + unit test · ⏳ chưa thử trên máy |
+| 4 | Trò chơi ru ngủ | ✅ code + unit test · ⏳ chưa nghe thử giọng vi-VN trên iPhone |
+| 5 | Màn người đồng hành | ✅ code + unit test · ⏳ chưa thử trên máy |
 | 6 | Hoàn thiện & cài lên máy | — |
 
 ## Chạy local
@@ -60,7 +62,7 @@ npx expo start
 ## Biến môi trường
 
 | Biến | Ở đâu | Ghi chú |
-|---|---|---|
+| --- | --- | --- |
 | `DATABASE_URL` | `api/.env` | Kết nối Neon. **Không bao giờ** đưa vào app |
 | `ADMIN_SECRET` | `api/.env` | Người đồng hành nhập khi đăng ký |
 | `EXPO_PUBLIC_API_URL` | `app/.env` | Dev: `http://localhost:3000` · build: URL `https` của Vercel. Mọi biến `EXPO_PUBLIC_*` đều công khai trong app |
@@ -85,7 +87,7 @@ npm run lint
 
 ## Cấu trúc
 
-```
+```text
 api/               NestJS — mỗi tài nguyên một module (auth, me, logs, notes)
   migrations/      file .sql, chạy bằng npm run migrate
   README.md        hợp đồng API chi tiết cho mobile

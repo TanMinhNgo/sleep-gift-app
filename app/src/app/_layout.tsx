@@ -1,3 +1,4 @@
+import * as Notifications from 'expo-notifications';
 import { DarkTheme, Stack, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 
@@ -8,6 +9,10 @@ import { resetTo } from '@/lib/nav';
 import { clearToken } from '@/lib/session';
 
 migrate();
+// Nhắc tới lúc đang mở app thì vẫn hiện banner.
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({ shouldShowBanner: true, shouldShowList: true, shouldPlaySound: false, shouldSetBadge: false }),
+});
 // Token bị thu hồi (máy khác join/register lại): về thiết lập, giữ nguyên SQLite.
 setUnauthorizedHandler(() => {
   clearToken();

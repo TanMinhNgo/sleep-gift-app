@@ -10,9 +10,12 @@ import {
   type StyleProp,
   type TextInputProps,
   type TextProps,
+  type ViewProps,
   type ViewStyle,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
+import type { GameId } from '@/lib/games';
 
 export const C = {
   bg: '#0B1026',
@@ -33,8 +36,8 @@ export function Screen({ children, style }: { children: ReactNode; style?: Style
   );
 }
 
-export function Card({ children, style }: { children: ReactNode; style?: StyleProp<ViewStyle> }) {
-  return <View style={[s.card, style]}>{children}</View>;
+export function Card({ style, ...rest }: ViewProps) {
+  return <View {...rest} style={[s.card, style]} />;
 }
 
 export function T({ muted, style, ...rest }: TextProps & { muted?: boolean }) {
@@ -128,6 +131,93 @@ export function ErrorText({ children }: { children: string | null }) {
   );
 }
 
+/** Dãy lựa chọn nhanh kiểu nút lõm; `60` hiển thị "60′+" khi `plusLast`. */
+export function Chips({
+  label,
+  options,
+  value,
+  onChange,
+  plusLast,
+}: {
+  label: string;
+  options: number[];
+  value: number;
+  onChange: (v: number) => void;
+  plusLast?: boolean;
+}) {
+  return (
+    <View style={{ flexDirection: 'row', gap: 6 }} accessibilityRole="radiogroup" accessibilityLabel={label}>
+      {options.map((o, i) => {
+        const on = o === value;
+        const text = `${o}′${plusLast && i === options.length - 1 ? '+' : ''}`;
+        return (
+          <Pressable
+            key={o}
+            accessibilityRole="radio"
+            accessibilityLabel={`${label}: ${o} phút`}
+            accessibilityState={{ checked: on }}
+            onPress={() => onChange(o)}
+            style={[s.chip, on && s.chipOn]}>
+            <Text style={[s.chipText, on && { color: C.bg }]}>{text}</Text>
+          </Pressable>
+        );
+      })}
+    </View>
+  );
+}
+
+/** Hàng "nhãn ……… [−] giá trị [+]". */
+export function Stepper({ label, value, onMinus, onPlus }: { label: string; value: string; onMinus: () => void; onPlus: () => void }) {
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+      <T style={{ fontWeight: '600', flexShrink: 1 }}>{label}</T>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+        <RoundButton label={`${label}: giảm`} icon="−" onPress={onMinus} />
+        <T accessibilityLiveRegion="polite" style={{ minWidth: 76, textAlign: 'center', fontSize: 22, fontWeight: '800', color: C.gold }}>
+          {value}
+        </T>
+        <RoundButton label={`${label}: tăng`} icon="+" onPress={onPlus} />
+      </View>
+    </View>
+  );
+}
+
+/** Cảm nhận 1–5 vẽ thành pha trăng; 0 = chưa ghi. */
+export function MoonPhase({ n, size = 30 }: { n: number; size?: number }) {
+  const base = { width: size, height: size, borderRadius: size / 2 };
+  if (n <= 0) return <View style={[base, { borderWidth: 2, borderStyle: 'dashed', borderColor: '#4A5590' }]} />;
+  if (n >= 5)
+    return (
+      <View
+        style={[base, { backgroundImage: 'radial-gradient(circle at 35% 30%, #FFF8DF, #FFE29C 45%, #E7B45C)', boxShadow: '0 0 10px rgba(255,214,130,0.4)' }]}
+      />
+    );
+  return <View style={[base, { backgroundColor: '#10163A', boxShadow: `inset ${Math.round((size * [0, 0.17, 0.3, 0.5, 0.73][n]))}px 0 0 ${C.gold}` }]} />;
+}
+
+const ORB: Record<GameId, string> = {
+  shuffle: 'radial-gradient(circle at 32% 28%, #D6DCFF 0%, #8E9DFA 45%, #4B58B8 100%)',
+  images: 'radial-gradient(circle at 32% 28%, #FFF3D1 0%, #FFCF7A 45%, #C08433 100%)',
+  walk: 'radial-gradient(circle at 32% 28%, #DDF8EC 0%, #8FDDBC 45%, #3E9A78 100%)',
+  awake: 'radial-gradient(circle at 32% 28%, #FFE1EA 0%, #F5A3BA 45%, #B5546F 100%)',
+  breath: 'radial-gradient(circle at 32% 28%, #D9F2FF 0%, #8CCBF0 45%, #3A7FAE 100%)',
+};
+
+/** Quả cầu 3D riêng màu của từng trò chơi. */
+export function GameOrb({ id, size }: { id: GameId; size: number }) {
+  return (
+    <View
+      style={{
+        width: size,
+        height: size,
+        borderRadius: size / 2,
+        backgroundImage: ORB[id],
+        boxShadow: `inset -${size * 0.08}px -${size * 0.11}px ${size * 0.2}px rgba(10,20,60,0.45), 0 8px 18px rgba(0,0,0,0.35)`,
+      }}
+    />
+  );
+}
+
 export function InviteCode({ code }: { code: string }) {
   return (
     <View style={{ flexDirection: 'row', gap: 8 }} accessible accessibilityLabel={`Mã kết nối ${code.split('').join(' ')}`}>
@@ -193,6 +283,9 @@ const s = StyleSheet.create({
     boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.16), 0 4px 0 #10163A, 0 10px 20px rgba(2,4,16,0.55)',
   },
   roundIcon: { color: C.text, fontSize: 28, lineHeight: 30, fontWeight: '600' },
+  chip: { flex: 1, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center', backgroundColor: C.well, boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.6)' },
+  chipOn: { backgroundImage: 'linear-gradient(180deg, #B3BEFF, #7C8CF8)', boxShadow: '0 3px 0 #4C59BE' },
+  chipText: { color: C.muted, fontSize: 14, fontWeight: '600' },
   tile: {
     width: 44,
     height: 62,
