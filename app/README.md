@@ -1,6 +1,6 @@
 # Ngủ Ngon — app (Expo)
 
-Spec: `../docs/superpowers/specs/2026-10-20-sleep-gift-app-design.md` · Plan: `../docs/superpowers/plans/2026-10-25-app-foundation.md`
+Hướng dẫn đầy đủ (API, biến môi trường, cài lên iPhone): xem `../README.md`.
 
 ```bash
 npm install
