@@ -3,13 +3,14 @@
 - [x] Task 1: schema 4 bảng theo spec, migration có transaction + theo dõi phiên bản, token/date utils, validation và error filter.
 - [x] Task 2: register / invites / join / Bearer guard; cấp lại token giữ user ID và dữ liệu; mã mời 7 ngày, một lần, khóa sau 5 lần sai.
 - [x] Task 3: GET/PATCH me; chỉ sleeper sửa quyền chia sẻ; mặc định không chia sẻ.
-- [x] 21 unit tests; build NestJS; TypeScript và ESLint không lỗi; 6 HTTP smoke checks local trả 401/400 đúng.
+- [x] 25 kiểm thử local (21 unit + 4 Swagger HTTP/schema); build NestJS; TypeScript và ESLint; 6 HTTP smoke checks local trả 401/400 đúng.
 - [x] Neon project `sleep-gift-app` (`bold-cloud-48708238`, Singapore); `.env` có kết nối production, `.env.test` trỏ branch test riêng. Cả hai được gitignore.
 - [x] Migration trên branch `test` và `production`, chạy lại lần hai đều thành công.
 - [x] 46/46 e2e trên Neon thật: auth, quyền chia sẻ, token rotation, giữ nhật ký, mã mời hết hạn/khóa/dùng đồng thời; logs/notes và giới hạn ngày Việt Nam.
 - [x] Task 4: PUT/GET logs; chặn partner khi chia sẻ tắt trong cùng snapshot SQL; bỏ qua updated_at cũ/bằng; ghi đồng thời giữ bản mới nhất; validate ngày và số liệu.
 - [x] Task 5: GET/POST/DELETE notes; sleeper chỉ đọc goodnight tới ngày Việt Nam +7; scene/word đầy đủ; DELETE 204, ID sai 400, không tồn tại 404.
 - [x] Hợp đồng logs/notes, lỗi, giới hạn và hành động mobile đã bổ sung vào `api/README.md`. Không cần migration mới.
+- [x] Swagger `/docs`, OpenAPI `/docs-json` và `/docs-yaml`: đủ 10 thao tác, Bearer Authorize, request/response/validation/errors; đã kiểm tra HTTP UI/assets và schemas. Dependency audit sạch sau override có phạm vi cho js-yaml.
 - [ ] Deploy Railway + smoke test production: dời đến sau phần phát triển/tích hợp chức năng, trước kiểm thử HTTPS và bàn giao; không còn là điều kiện hoàn thành Phase 1.
 
 Hợp đồng và hướng dẫn tích hợp mobile nằm trong `api/README.md`. Không sửa app hoặc tài liệu dùng chung. Chưa commit.

@@ -23,6 +23,22 @@ npm run start:dev
 
 Migration dùng kết nối trực tiếp Neon (host không có `-pooler`), chạy transaction và ghi tên vào `schema_migrations`; chạy lại không tạo lại bảng. Không chạy SQL schema bằng tay rồi chạy migration. API dùng `neon()` qua HTTP; migration dùng `Pool` qua WebSocket. Chạy lệnh trong `api/` để dotenv nạp đúng file.
 
+## Swagger / OpenAPI
+
+Sau khi chạy `npm run start:dev`:
+
+- Swagger UI: `http://localhost:3000/docs`
+- OpenAPI JSON (import được vào Postman): `http://localhost:3000/docs-json`
+- OpenAPI YAML: `http://localhost:3000/docs-yaml`
+
+Sau deploy, dùng cùng các path trên domain HTTPS của API. Docs có đủ 10 thao tác, chia theo Auth / Profile / Logs / Notes; có body mẫu, field bắt buộc/tùy chọn, query/path params, response và lỗi `{error}`.
+
+Để thử endpoint được bảo vệ: lấy `token` từ register/join, bấm **Authorize**, dán **chỉ token** (không thêm `Bearer`), rồi dùng **Try it out → Execute**. Đây là token ngẫu nhiên, không phải JWT. Không có secret/token thật trong ví dụ; Swagger không cấu hình lưu token qua lần tải lại trang.
+
+Try it out gửi request thật vào API đang mở. Register lại sẽ thay token partner cũ; join lại bằng mã mới sẽ thay token sleeper cũ. Docs không yêu cầu token để xem; các API nghiệp vụ vẫn kiểm tra Bearer và vai trò như trước.
+
+`@nestjs/swagger` dùng bản 11.4.7 tương thích NestJS 11. Override riêng `js-yaml` của Swagger lên `^5.5.0` để tránh advisory của bản 5.3.0 bị dependency pin; bỏ override khi Swagger dùng bản đã vá. Kiểm thử docs bao gồm cả xuất YAML.
+
 ## Hợp đồng cho mobile
 
 | Endpoint | Body / quyền | Response thành công |
@@ -110,4 +126,4 @@ ADMIN_SECRET=local-test-only-secret
 npm run test:e2e
 ```
 
-Kết quả 2026-10-27: 21/21 unit và 46/46 e2e trên branch Neon test đã qua. E2E kiểm tra ghi DB thật, mã mời hết hạn/khóa/dùng một lần/gửi song song, thu hồi token, giữ nhật ký khi join lại, quyền sửa/đọc chia sẻ, đồng bộ nhật ký cũ/mới/đồng thời, validation, giới hạn lời chúc theo ngày Việt Nam và xóa note. Chưa có kiểm chứng app trên điện thoại hoặc API production.
+Kết quả: 25/25 kiểm thử local (21 unit + 4 Swagger HTTP/schema) và 46/46 e2e trên branch Neon test đã qua. E2E kiểm tra ghi DB thật, mã mời hết hạn/khóa/dùng một lần/gửi song song, thu hồi token, giữ nhật ký khi join lại, quyền sửa/đọc chia sẻ, đồng bộ nhật ký cũ/mới/đồng thời, validation, giới hạn lời chúc theo ngày Việt Nam và xóa note. Chưa có kiểm chứng app trên điện thoại hoặc API production.

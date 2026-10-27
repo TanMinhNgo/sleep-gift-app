@@ -3,6 +3,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ErrorFilter } from './common/error.filter';
+import { setupSwagger } from './common/swagger';
 
 export function configure(app: INestApplication): void {
   app.useGlobalPipes(
@@ -13,6 +14,7 @@ export function configure(app: INestApplication): void {
     }),
   );
   app.useGlobalFilters(new ErrorFilter());
+  setupSwagger(app);
 }
 
 async function bootstrap() {
